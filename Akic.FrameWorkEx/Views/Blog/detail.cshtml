@@ -1,0 +1,245 @@
+﻿@{
+    Layout = "~/Views/Shared/_hightLightJS.cshtml";
+}
+  
+@model Akic.Core.Domain.Commom.Article
+@using Akic.Core.Domain.Commom
+@using Akic.Core.ResultHelper
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Home</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Bootstrap styles -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="~/Content/NewsWebSite/js/jquery.min.js"></script>
+    <link href="~/Content/NewsWebSite/css/bootstrap.css" rel='stylesheet' type='text/css' />
+    <link href="~/Content/BlogContent/css/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="~/Content/NewsWebSite/js/bootstrap.js"></script>
+    <script src="~/Content/BlogContent/js/modernizr.js"></script>
+
+    <!-- Font-Awesome -->
+    <!-- Google Webfonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600|PT+Serif:400,400italic' rel='stylesheet' type='text/css'>
+    <!-- Styles -->
+    <link href="~/Content/NewsWebSite/css/style.css" rel="stylesheet" type="text/css" media="all" />
+
+    <link rel="stylesheet" href="~/Content/BlogContent/css/style.css" id="theme-styles">
+</head>
+<body>
+    <script type="text/javascript">
+        $(function () {
+            getAllComment();
+            autosize($('textarea'));
+        })
+        $(function(){
+            $("#summitComment").click(function(){
+                var getContent=$("#formContent").val();
+                $.ajax({
+                    url: "@Url.Action("PostArticleComment", "Comment")",
+                    type: "Post",
+                data: {
+                    "ArticleId": '@Model.Id',
+                    "Content":getContent,
+
+                    } ,
+                dataType: "json",
+                success: function (data) {
+                    if (data.type == 1) {
+                        alert("发布成功");
+                        $("div#replyFormDisplay").remove();
+                        getAllComment();
+                    }
+                },
+                });
+
+        });
+        })
+        function getAllComment()
+        {
+          
+            $.get("/Comment/getArticleComment", { ArticleId: "@Model.Id" },
+        function (data){
+            //先移除旧的，添加新的
+            var commentList=$("#responseList");
+            for (var i = 0; i < data.Data.length; i++) {
+                $("div#AllComment" + data.Data[i].Id + "").remove();
+                $("div#replyDisplay" + data.Data[i].Id + "").remove();
+                var str = "      <div class='media response-info' id='AllComment" + data.Data[i].Id + "'>";
+                str+=" <div class='media-left response-text-left'>";
+                str+="  <a href='#'>";
+                str+="  <img class='' src='/Content/NewsWebSite/images/c1.jpg' alt='' />";
+                str+="   </a>";
+                str+="  <h5><a href='#'>"+ data.Data[i].UserName+"</a></h5>";
+                str+=" </div>";
+                str+="  <div class='media-body response-text-right'>";
+                str+=" <p> </p>";
+                str+="  <h5>"+ data.Data[i].Content+"</h5> ";
+                str+="<p> </p> ";
+                str+="<ul>";
+                str+=" <li>"+ data.Data[i].AddedDate+"</li>";
+                str += "<li><a href='javascript:void(0)' onclick='ReplyForm(&quot;" + data.Data[i].Id + "&quot;)' style='cursor:pointer'>Reply</a></li>";
+                str+=" </ul>";
+                if(data.Data[i].ReplyCount>0)
+                {
+                    str+=" <a data-toggle='collapse' data-target='#demo"+data.Data[i].Id+"' style='cursor:pointer'>  查看剩余"+ data.Data[i].ReplyCount+"条评论 </a>  ";
+                    str+=" <div id='demo"+data.Data[i].Id+"' class='collapse'>";
+                    str+=" <div id='ReplyId"+data.Data[i].ReplyId+"'>";
+                    str+="</div>";
+                }
+
+                str+="</div>";
+                str+="<div class='clearfix'> </div>";
+                str+="</div>";
+                str+=" </div>";
+                str+="</div>";
+                str+=" <div id='replyDisplay"+data.Data[i].Id+"'></div>";
+                str+="</div>";
+                commentList.append(str);
+                if(data.Data[i].ReplyCount>0)
+                    getReplyComment(data.Data[i].Id)
+            }
+        });
+        }
+        function ReplyForm(ReplyID) {
+
+            $("div#replyFormDisplay").remove();
+            var getdiv = $('#replyDisplay' + ReplyID + '');
+            var str = "<div id=replyFormDisplay class='coment-form'>";
+            str += "  <textarea  id='formContentId" + ReplyID + "' style='width:100%;max-height: 300px' ></textarea> ";
+            str += " <input type='button' id='SummitId" + ReplyID + "'   onmousedown='ReplyFormSummit(event,&quot;" + ReplyID + "&quot;)'  value='Submit Comment'>"
+            str += "<div class='clearfix'> </div>";
+            str += "</div>"
+            getdiv.append(str);
+            autosize($('textarea'));
+
+        }
+        function ReplyFormSummit(e, ReplyID) {
+            var str = '#formContentId' + ReplyID + ''
+            var getContent = $(str).val();
+
+            $.ajax({
+                url: "@Url.Action("PostArticleReplyComment", "Comment")",
+                type: "Post",
+            data: {
+                "ReplyID": ReplyID,
+                "Content":getContent,
+
+                } ,
+            dataType: "json",
+            success: function (data) {
+                alert("发布成功");
+                $("div#replyFormDisplay").remove();
+                getAllComment();
+            },
+                });
+     
+        }
+        function getReplyComment(ReplyID)
+        {
+            $.get("/Comment/getArticleReplyComment", { ReplyId: ReplyID },
+           function (data){
+               var replyList = $('#ReplyId' + ReplyID + '');
+               for (var i = 0; i < data.Data.length; i++) {
+                   var strEX = " <div class='media response-info'>";
+                   strEX += "<div class='media-left response-text-left'>";
+                   strEX += "<a href='#'>";
+                   strEX += "  <img class='media-object' src='/Content/NewsWebSite/images/c2.jpg' alt='' />";
+                   strEX += " </a>";
+                   strEX += "<h5><a href='#'>" + data.Data[i].UserName + "</a></h5>";
+                   strEX += " </div>";
+                   strEX += " <div class='media-body response-text-right'>";
+                   strEX += " <p> </p>";
+                   strEX += "  <h5>" + data.Data[i].Content + "</h5> ";
+                   strEX += "<p> </p> ";
+                   strEX += "<ul>";
+                   strEX += " <li>" + data.Data[i].AddedDate + "</li>";
+                   strEX += " <li><a  onclick='ReplyForm(&quot;" + ReplyID + "&quot;)'>Reply</a></li>";
+                   strEX += " </ul>";
+                   replyList.append(strEX)
+               }
+
+           });
+        }
+
+    </script>
+    <header>
+            @Html.Partial("_headerPage")
+    </header>
+
+    <div class="widewrapper main">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 blog-main">
+                    <article class="blog-post">
+                        <header>
+
+                             
+                        </header>
+                        <div class="body">
+                            <h1>@Model.ArticleTitle</h1>
+                            <div class="meta">
+                                <i class="fa fa-user"></i> John Doe <i class="fa fa-calendar"></i>@Model.AddedDate<i class="fa fa-comments"></i><span class="data"><a href="#comments">@Model.CommentNum</a></span>
+                            </div>
+                           @(new HtmlString((Model.ArticleContent)))
+
+                        </div>
+                    </article>
+
+                    <aside class="social-icons clearfix">
+                        <h3>Share on </h3>
+                        <a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i class="fa fa-google"></i></a>
+                    </aside>
+
+                    <div class="coment-form">
+                        <h4>Leave your comment</h4>
+                        <form>
+                            <textarea id="formContent" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Your Comment...';}" required="">Your Comment...</textarea>
+                            <input type="button" id="summitComment" value="Submit Comment">
+                        </form>
+                    </div>
+                    <div class="response">
+                        <h4>Responses</h4>
+                        <div id="responseList">
+
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                </div>
+                @Html.Partial("_BlogrighterPage")
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        @Html.Partial("_footerPage")
+    </footer>
+
+    <script src="~/Content/js/autosize.js"></script>
+    <script type="text/javascript">
+    var replySure = false;
+    $(function () {
+        var display = $("#replyDisplay");
+        $("#replyClick").click(function () {
+            if (replySure === true) {
+                return;
+            }
+            else {
+                var str = "  <textarea style='width:100%;max-height: 300px' onfocus='this.value = '';' onblur='if (this.value == '') {this.value = 'Your Comment...';}' required=''>Your Comment...</textarea> ";
+                str += " <input type='submit' value='Submit Comment'>"
+                display.append(str);
+                replySure = true
+                autosize($('textarea'));
+            }
+
+
+        })
+
+    })
+    
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+﻿
+@{
+    ViewBag.Title = "fUCK";
+}
+<link href="~/Content/QQQ.css" rel="stylesheet" />
+<link href="~/Content/uploadify/uploadify.css" rel="stylesheet" />
+<script src="https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+<script src="~/Content/uploadify/jquery.uploadify.js"></script>
+<script src="~/Content/syntaxhighlighter/src/shCore.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushBash.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushCpp.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushCSharp.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushCss.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushDelphi.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushDiff.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushGroovy.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushJava.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushJScript.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushPhp.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushPlain.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushPython.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushRuby.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushScala.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushSql.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushVb.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushXml.js"></script>
+<link type="text/css" rel="stylesheet" href="~/Content/syntaxhighlighter/styles/shCore.css" />
+<link type="text/css" rel="stylesheet" href="~/Content/syntaxhighlighter/styles/shThemeDefault.css" />
+ 
+<style type="text/css">
+    div {
+        width: 100px;
+        height: 100px;
+        border: #000 solid 1px;
+        margin: 50px auto;
+        overflow: hidden;
+    }
+
+        div img {
+            cursor: pointer;
+            transition: all 0.6s;
+        }
+
+            div img:hover {
+                transform: scale(1.4);
+            }
+</style>
+
+  
+
+    <script type="text/javascript">
+        SyntaxHighlighter.config.clipboardSwf = '/Content/syntaxhighlighter/scripts/clipboard.swf';
+        SyntaxHighlighter.config.tagName = 'pre';       //可以更改解析的默认Tag。
+        SyntaxHighlighter.config.bloggerMode = true;
+        SyntaxHighlighter.config.stripBrs = true;
+        SyntaxHighlighter.config.strings = {
+            expandSource: '展开代码',
+            viewSource: '查看代码',
+            copyToClipboard: '复制代码',
+            copyToClipboardConfirmation: '代码复制成功',
+            print: '打印',
+            help: '?',
+            alert: '语法高亮\n\n',
+            noBrush: '不能找到刷子: ',
+            brushNotHtmlScript: '刷子没有配置html-script选项',
+            aboutDialog: '<div></div>'
+        };
+        SyntaxHighlighter.all();
+
+    </script>
+
+    <h2>fUCK</h2>
+
+<div>
+    <img src="~/Content/Images/News/201806/201806052245470672856410f5472d8.png" />
+</div>  
+ 
+ 
+<pre class="brush: java; collapse: true;">
+        public void javaMethod() {
+            int i = 3;
+        }
+    </pre>
+
+    <script>
+        $(function () {
+            $('#btn_upload').uploadify({
+                uploader: '/article/upload',            // 服务器处理地址
+                swf: '/Content/uploadify/uploadify.swf',
+                buttonText: "选择文件",                  //按钮文字
+                height: 34,                             //按钮高度
+                width: 82,                              //按钮宽度
+                fileTypeExts: "*.jpg;*.png;",           //允许的文件类型
+                fileTypeDesc: "请选择图片文件",           //文件说明
+                formData: { "imgType": "normal" }, //提交给服务器端的参数
+                onUploadSuccess: function (file, data, response) {   //一个文件上传成功后的响应事件处理
+                    var data = $.parseJSON(data);
+                    alert(data.imgpath);
+                }
+            });
+        });
+    </script>

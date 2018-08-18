@@ -1,0 +1,367 @@
+﻿@model Akic.Core.Domain.Commom.News
+@using Akic.Core.Domain.Commom
+@using Akic.Core.ResultHelper
+<html>
+<head>
+    <title>Single</title>
+    <link href="~/Content/NewsWebSite/css/bootstrap.css" rel='stylesheet' type='text/css' />
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <!-- Custom Theme files -->
+    <link href="~/Content/NewsWebSite/css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <!-- Custom Theme files -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Express News Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- for bootstrap working -->
+    <script type="text/javascript" src="~/Content/NewsWebSite/js/bootstrap.js"></script>
+    <!-- //for bootstrap working -->
+    <!-- web-fonts -->
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
+    <script src="~/Content/NewsWebSite/js/responsiveslides.min.js"></script>
+    <script>
+		$(function () {
+		  $("#slider").responsiveSlides({
+			auto: true,
+			nav: true,
+			speed: 500,
+			namespace: "callbacks",
+			pager: true,
+		  });
+		});
+    </script>
+    <script type="text/javascript" src="~/Content/NewsWebSite/js/move-top.js"></script>
+    <script type="text/javascript" src="~/Content/NewsWebSite/js/easing.js"></script>
+    <!--/script-->
+    <script type="text/javascript">
+    jQuery(document).ready(function($) {
+        $(".scroll").click(function(event){
+            event.preventDefault();
+            $('html,body').animate({scrollTop:$(this.hash).offset().top},900);
+        });
+    });
+
+    $(function () {
+        getAllComment();
+        autosize($('textarea'));
+    })
+    $(function(){
+        $("#summitComment").click(function(){
+            var getContent=$("#formContent").val();
+            $.ajax({
+                url: "@Url.Action("PostNewComment", "Comment")",
+			            type: "Post",
+			        data: {
+			            "NewId":'@Model.Id',
+                        "Content":getContent,
+
+                        } ,
+			        dataType: "json",
+			        success: function (data) {
+			            if (data.type == 1) {
+			                alert("发布成功");
+			                $("div#replyFormDisplay").remove();
+			                getAllComment();
+			            }
+			        },
+			        });
+
+			});
+			})
+     function getAllComment()
+        {
+          
+            $.get("/Comment/getNewsComment", {NewsId:"@Model.Id"},
+        function (data){
+            //先移除旧的，添加新的
+            var commentList=$("#responseList");
+            for (var i = 0; i < data.Data.length; i++) {
+                $("div#AllComment" + data.Data[i].Id + "").remove();
+                $("div#replyDisplay" + data.Data[i].Id + "").remove();
+                var str = "      <div class='media response-info' id='AllComment" + data.Data[i].Id + "'>";
+                str+=" <div class='media-left response-text-left'>";
+                str+="  <a href='#'>";
+                str+="  <img class='' src='/Content/NewsWebSite/images/c1.jpg' alt='' />";
+                str+="   </a>";
+                str+="  <h5><a href='#'>"+ data.Data[i].UserName+"</a></h5>";
+                str+=" </div>";
+                str+="  <div class='media-body response-text-right'>";
+                str+=" <p> </p>";
+                str+="  <h5>"+ data.Data[i].Content+"</h5> ";
+                str+="<p> </p> ";
+                str+="<ul>";
+                str+=" <li>"+ data.Data[i].AddedDate+"</li>";
+                str += "<li><a href='javascript:void(0)' onclick='ReplyForm(&quot;" + data.Data[i].Id + "&quot;)' style='cursor:pointer'>Reply</a></li>";
+                str+=" </ul>";
+                if(data.Data[i].ReplyCount>0)
+                {
+                    str+=" <a data-toggle='collapse' data-target='#demo"+data.Data[i].Id+"' style='cursor:pointer'>  查看剩余"+ data.Data[i].ReplyCount+"条评论 </a>  ";
+                    str+=" <div id='demo"+data.Data[i].Id+"' class='collapse'>";
+                    str+=" <div id='ReplyId"+data.Data[i].ReplyId+"'>";
+                    str+="</div>";
+                }
+
+                str+="</div>";
+                str+="<div class='clearfix'> </div>";
+                str+="</div>";
+                str+=" </div>";
+                str+="</div>";
+                str+=" <div id='replyDisplay"+data.Data[i].Id+"'></div>";
+                str+="</div>";
+                commentList.append(str);
+                if(data.Data[i].ReplyCount>0)
+                    getReplyComment(data.Data[i].Id)
+            }
+        });
+     }
+        function ReplyForm(ReplyID) {
+
+            $("div#replyFormDisplay").remove();
+            var getdiv = $('#replyDisplay' + ReplyID + '');
+            var str = "<div id=replyFormDisplay class='coment-form'>";
+            str += "  <textarea  id='formContentId" + ReplyID + "' style='width:100%;max-height: 300px' ></textarea> ";
+            str += " <input type='button' id='SummitId" + ReplyID + "'   onmousedown='ReplyFormSummit(event,&quot;" + ReplyID + "&quot;)'  value='Submit Comment'>"
+            str += "<div class='clearfix'> </div>";
+            str += "</div>"
+            getdiv.append(str);
+            autosize($('textarea'));
+
+        }
+        function ReplyFormSummit(e, ReplyID) {
+                var str = '#formContentId' + ReplyID + ''
+                var getContent = $(str).val();
+
+               $.ajax({
+                    url: "@Url.Action("PostNewReplyComment", "Comment")",
+                    type: "Post",
+                data: {
+                    "ReplyID": ReplyID,
+                    "Content":getContent,
+
+                    } ,
+                dataType: "json",
+                success: function (data) {
+                    alert("发布成功");
+                    $("div#replyFormDisplay").remove();
+                    getAllComment();
+                },
+                });
+     
+        }
+    function getReplyComment(ReplyID)
+    {
+        $.get("/Comment/getNewsReplyComment", {ReplyId:ReplyID},
+       function (data){
+           var replyList = $('#ReplyId' + ReplyID + '');
+           for (var i = 0; i < data.Data.length; i++) {
+               var strEX = " <div class='media response-info'>";
+               strEX += "<div class='media-left response-text-left'>";
+               strEX += "<a href='#'>";
+               strEX += "  <img class='media-object' src='/Content/NewsWebSite/images/c2.jpg' alt='' />";
+               strEX += " </a>";
+               strEX += "<h5><a href='#'>" + data.Data[i].UserName + "</a></h5>";
+               strEX += " </div>";
+               strEX += " <div class='media-body response-text-right'>";
+               strEX += " <p> </p>";
+               strEX += "  <h5>" + data.Data[i].Content + "</h5> ";
+               strEX += "<p> </p> ";
+               strEX += "<ul>";
+               strEX += " <li>" + data.Data[i].AddedDate + "</li>";
+               strEX += " <li><a  onclick='ReplyForm(&quot;" + ReplyID + "&quot;)'>Reply</a></li>";
+               strEX += " </ul>";
+               replyList.append(strEX)
+           }
+
+       });
+    }
+
+
+    </script>
+</head>
+<body>
+    <!-- header-section-starts-here -->
+    @Html.Partial("_headerPage")
+    <!-- header-section-ends-here -->
+    <div class="wrap">
+        <div class="move-text">
+            <div class="breaking_news">
+                <h2>置顶新闻</h2>
+            </div>
+            <div class="marquee">
+                @foreach (var item in (List<News>)ViewBag.getSomeTopFloat)
+                {
+                    var i = (int)ViewBag.index++;
+                    string mar = "marquee" + i.ToString();
+                    <div class=@mar><a class="breaking" href=/Main/Single/@item.Id>>>@(new HtmlString(ResultHelper.SubValue(ResultHelper.NoHtml(item.NewsContent), 20)))</a></div>
+
+                }               
+                 <div class="clearfix"></div>
+            </div>
+            <div class="clearfix"></div>
+            <script type="text/javascript" src="~/Content/NewsWebSite/js/jquery.marquee.min.js"></script>
+            <script>
+			  $('.marquee').marquee({ pauseOnHover: true });
+			  // sourceURL=pen.js
+            </script>
+        </div>
+    </div>
+    <!-- content-section-starts-here -->
+    <div class="main-body">
+        <div class="wrap">
+            <ol class="breadcrumb">
+                <li><a href="/Main/Index">主页</a></li>
+                <li class="active">Single Page</li>
+            </ol>
+            <div class="single-page">
+                <div class="col-md-2 share_grid">
+                    <h3>SHARE</h3>
+                    <ul>
+                        <li>
+                            <a href="#">
+                                <i class="facebook"></i>
+                                <div class="views">
+                                    <span>SHARE</span>
+                                    <label>180</label>
+                                </div>
+                                <div class="clearfix"></div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="twitter"></i>
+                                <div class="views">
+                                    <span>TWEET</span>
+                                    <label>355</label>
+                                </div>
+                                <div class="clearfix"></div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="linkedin"></i>
+                                <div class="views">
+                                    <span>SHARES</span>
+                                    <label>28</label>
+                                </div>
+                                <div class="clearfix"></div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="pinterest"></i>
+                                <div class="views">
+                                    <span>PIN</span>
+                                    <label>16</label>
+                                </div>
+                                <div class="clearfix"></div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="email"></i>
+                                <div class="views">
+                                    <span>Email</span>
+                                </div>
+                                <div class="clearfix"></div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6 content-left single-post">
+                    <div class="blog-posts">
+                        <h3 class="post">@Model.NewsTitle</h3>
+                        <div class="last-article">
+                            <span class="artext">@(new HtmlString((Model.NewsContent)))</span>
+                            <ul class="categories">
+                                <li><a href="#">Markets</a></li>
+                                <li><a href="#">Business</a></li>
+                                <li><a href="#">Sport</a></li>
+                                <li><a href="#">Special reports</a></li>
+                                <li><a href="#">Culture</a></li>
+                            </ul>
+                            <div class="clearfix"></div>
+                            <!--related-posts-->
+                            <div class="row related-posts">
+                                <h4>Articles You May Like</h4>
+                                <div class="col-xs-6 col-md-3 related-grids">
+                                    <a href="single.html" class="thumbnail">
+                                        <img src="~/Content/NewsWebSite/images/f2.jpg" alt="" />
+                                    </a>
+                                    <h5><a href="single.html">Lorem Ipsum is simply</a></h5>
+                                </div>
+                                <div class="col-xs-6 col-md-3 related-grids">
+                                    <a href="single.html" class="thumbnail">
+                                        <img src="~/Content/NewsWebSite/images/f1.jpg" alt="" />
+                                    </a>
+                                    <h5><a href="single.html">Lorem Ipsum is simply</a></h5>
+                                </div>
+                                <div class="col-xs-6 col-md-3 related-grids">
+                                    <a href="single.html" class="thumbnail">
+                                        <img src="~/Content/NewsWebSite/images/f3.jpg" alt="" />
+                                    </a>
+                                    <h5><a href="single.html">Lorem Ipsum is simply</a></h5>
+                                </div>
+                                <div class="col-xs-6 col-md-3 related-grids">
+                                    <a href="single.html" class="thumbnail">
+                                        <img src="~/Content/NewsWebSite/images/f6.jpg" alt="" />
+                                    </a>
+                                    <h5><a href="single.html">Lorem Ipsum is simply</a></h5>
+                                </div>
+                            </div>
+                            <!--//related-posts-->
+                            <div class="coment-form">
+                                <h4>Leave your comment</h4>
+                                <form>
+                                    <textarea id="formContent" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Your Comment...';}" required="">Your Comment...</textarea>
+                                    <input type="button" id="summitComment" value="Submit Comment">
+                                </form>
+                            </div>
+                            <div class="response">
+                                <h4>Responses</h4>
+                                <div id="responseList">
+
+                                </div>
+
+                            </div>
+                            
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+
+                </div>
+                @Html.Partial("_righterPage")
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    <!-- content-section-ends-here -->
+    <!-- footer-section-starts-here -->
+    @Html.Partial("_footerPage")
+    <!-- footer-section-ends-here -->
+    <script src="~/Content/js/autosize.js"></script>
+    <script>
+
+    </script>
+    <script type="text/javascript">
+        var replySure = false;
+   
+		$(document).ready(function() {
+				/*
+				var defaults = {
+				wrapID: 'toTop', // fading element id
+				wrapHoverID: 'toTopHover', // fading element hover id
+				scrollSpeed: 1200,
+				easingType: 'linear'
+				};
+				*/
+		$().UItoTop({ easingType: 'easeOutQuart' });
+});
+    </script>
+    <a href="#to-top" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+    <!---->
+</body>
+</html>

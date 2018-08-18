@@ -1,0 +1,129 @@
+﻿
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <script src="~/Content/Admin_CSS_JS/js/jquery.js"></script>
+    <link href="~/Content/Admin_CSS_JS/css/style.css" rel="stylesheet" />
+    <script src="~/Content/UEditor/ueditor.config.js"></script>
+    <script src="~/Content/UEditor/ueditor.all.js"></script>
+    <link href="~/Content/UEditor/themes/iframe.css" rel="stylesheet" />
+ 
+
+
+    <link href="~/Content/uploadify/uploadify.css" rel="stylesheet" />
+    <script src="~/Content/uploadify/jquery.uploadify.min.js"></script>
+</head>
+
+<body>
+
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">新闻发布</a></li>
+        </ul>
+    </div>
+
+    <div class="formbody">
+
+        <div class="formtitle"><span>基本信息</span></div>
+
+        <ul class="forminfo">
+            <li><label>新闻标题</label><input name="" type="text" class="dfinput" id="getTitle" /><i>标题不能超过30个字符</i></li>
+            <li><label>是否置顶</label><cite><input name="radioName" type="radio" value="1" />是&nbsp;&nbsp;&nbsp;&nbsp;<input name="radioName" type="radio" value="2" checked="checked" />否</cite></li>
+            <li><label>发布类型</label>
+                <select class="dfinput"  id="getSelectValue">
+                    <option>随笔</option>
+                    <option>技术</option>
+                    <option>杂谈</option>
+                </select>
+            </li>
+            <li><label>封面图片路径</label><input name="" type="text" class="dfinput" id="getUpPath"/><i>点击上传图片</i></li>
+            <li><span id="btn_upload"></span></li>
+            <li>
+                @using (Html.BeginForm())
+                {
+                    <script id="ueditor" style="width: 750px; height: 300px;"></script>
+                }
+         </li> 
+            <li><label>&nbsp;</label><input id="btnSummit" type="button" class="btn" value="确认提交" /></li>
+        </ul>
+
+       
+    </div>
+
+     <script type="text/javascript">
+
+    var editorOption = {
+
+        UEDITOR_HOME_URL: '/Content/UEditor/',//配置编辑器路
+        iframeCssUrl: '/Content/UEditor/themes/iframe.css',//样式路
+        initialContent: '请输入内容',//初始化编辑器内容
+        autoHeightEnabled: true,//高度自动增长
+        minFrameHeight: 400//最小高度
+
+
+    };
+    var editor = new baidu.editor.ui.Editor(editorOption);
+    editor.render('ueditor');
+    $(function () {
+
+        $("#btnSummit").click(function () {
+
+            ue = UE.getEditor('ueditor');
+
+            var getTitle = $("#getTitle").val();
+            var getContent = ue.getContent();
+            var getCategory = $("#getSelectValue").val();
+            var getPath = $("#getUpPath").val();
+            var getTop=false;
+            var judgeValue = $("input[name='radioName']:checked").val();
+            if (judgeValue == "1")
+                getTop = true;
+            else if (judgeValue == "2")
+                getTop = false;
+
+            $.ajax({
+                url: "@Url.Action("Create","NewsPost")",
+                type: "Post",
+                data: {
+                    "NewsTitle":getTitle,
+                    "Category":getCategory,
+                    "IsTop": getTop,
+                    "NewsContent":getContent,
+                    "ThumbPath":getPath,    
+                } ,
+                dataType: "json",
+                success: function (data) {
+                    if (data.type == 1) {
+                        alert("发布成功")
+                        window.location.reload();
+                    }
+                },
+            });
+
+        })
+    })
+    $(function () {
+        var pathType = 'News';
+        $('#btn_upload').uploadify({
+            uploader: '/Admin/NewsPost/upload',            // 服务器处理地址
+            swf: '/Content/uploadify/uploadify.swf',
+            buttonText: "选择文件",                  //按钮文字
+            height: 34,                             //按钮高度
+            width: 82,                              //按钮宽度
+            fileTypeExts: '*.gif; *.jpg; *.png;',           //允许的文件类型
+            fileTypeDesc: "请选择图片文件",           //文件说明
+            formData: { "imgType": "normal", "FileType": pathType }, //提交给服务器端的参数
+            onUploadSuccess: function (file, data, response) {   //一个文件上传成功后的响应事件处理
+                var data = $.parseJSON(data);
+                $("#getUpPath").val(data.imgpath);
+
+            }
+        });
+    });
+    </script>
+
+</body>
+</html>

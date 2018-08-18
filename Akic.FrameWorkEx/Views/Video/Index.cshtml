@@ -1,0 +1,234 @@
+﻿@model IEnumerable<Akic.Core.Domain.Commom.Video>
+@using Akic.Core.ResultHelper
+@using Akic.Core.Domain.Commom
+@using Akic.Core
+<html lang="en">
+<head>
+
+    <!-- Basic Page Needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>zFanVideo | Free Video Html5 Templates</title>
+    <meta name="description" content="Free Responsive Html5 Css3 Templates | zerotheme.com">
+    <meta name="author" content="www.zerotheme.com">
+
+    <!-- Mobile Specific Metas
+    ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+    ================================================== -->
+
+    <link href="~/Content/NewsWebSite/css/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/VideoWebSite/css/zerogrid.css">
+    <link rel="stylesheet" href="~/Content/VideoWebSite/css/style.css">
+    <link rel="stylesheet" href="~/Content/VideoWebSite/css/menu.css">
+    <!-- Owl Carousel Assets -->
+    <link href="~/Content/VideoWebSite/css/owl.carousel.css" rel="stylesheet">
+    <link href="~/Content/VideoWebSite/css/owl.theme.css" rel="stylesheet">
+    <!-- Custom Fonts -->
+
+    <link href="~/Content/VideoWebSite/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+
+</head>
+<body id="wrapper">
+    <div class="wrap-body">
+
+        <!--////////////////////////////////////Header-->
+        <header>
+            <div class="wrap-header">
+                <div class="zerogrid">
+                    <div class="row">
+                        <a href="/Video/Index" class="logo"><img src="/Content/VideoWebSite/images/logo.png" /></a>
+                        <ul class="quick-link">
+                            <li><a href="#" title="Upload Video"><i class="fa fa-upload"></i></a></li>
+                            <li><a href="#" title="Log in"><i class="fa fa-user"></i></a></li>
+                            <li><a href="#" title="Warning"><i class="fa fa-bell"></i></a></li>
+                        </ul>
+                        <ul class="social">
+                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                            <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                            <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </header>
+
+        <!--////////////////////////////////////Menu-->
+        <!--////////////////////////////////////Container-->
+        <section id="container" class="index-page">
+            <div class="wrap-container zerogrid">
+                <!------------------------------------->
+                <div class="row">
+                    <div class="header">
+                        <h2><a href="/Main/Index">新闻</a>&nbsp;&nbsp;&nbsp;<a href="/Blog/Index">博客</a></h2>
+                    </div>
+                    <div class="row">
+                        <div class="most-viewed">
+                            <div class="col-2-4">
+                                <div class="wrap-col">
+                                    @foreach (var item in (List<Video>)ViewBag.getOneTopVideo)
+                                    {
+                                        <div class="zoom-container">
+                                            <a href="@Url.Action("Single","Video", new { id = item.Id })">
+                                                <span class="zoom-caption">
+                                                    <i class="icon-play fa fa-play"></i>
+                                                </span>
+                                                <img src="@item.ThumbPath" />
+                                            </a>
+                                        </div>
+                                    }
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="extra">
+ 
+                            <div class="col-1-4">
+                                <div class="wrap-col">
+                                   @foreach (var item in (List<Video>)ViewBag.getSomeU3DTopVideo)
+                                   {
+                                    <div class="zoom-container">
+                                        <a href="@Url.Action("Single","Video", new { id = item.Id })">
+                                            <span class="zoom-caption">
+                                                <i class="icon-play fa fa-play"></i>
+                                            </span>
+                                            <img src="@item.ThumbPath" style="height:190px" />
+                                        </a>
+                                    </div>
+                                   }
+                                </div>
+                            </div>
+                            <div class="col-1-4">
+                                <div class="wrap-col">
+                                   @foreach (var item in (List<Video>)ViewBag.getSomeCSharpTopVideo)
+                                   {
+                                    <div class="zoom-container">
+                                        <a href="@Url.Action("Single","Video", new { id = item.Id })">
+                                            <span class="zoom-caption">
+                                                <i class="icon-play fa fa-play"></i>
+                                            </span>
+                                            <img src="@item.ThumbPath" style="height:190px" />
+                                        </a>
+                                    </div>
+                                   }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="main-content" class="col-2-3">
+                        <div class="wrap-content">
+                            <section class="vid-tv">
+                                <div class="header">
+                                    <h2>Unity3D</h2>
+                                </div>
+                                <div class="row">
+                                    <div id="owl-demo-1" class="owl-carousel">
+                                        @foreach (var item in Model)
+                                        {
+                                            if (item.Category == "Untiy3d")
+                                            {
+                                                <div class="item wrap-vid">
+                                                    <div class="zoom-container">
+                                                        <a href="@Url.Action("Single","Video", new { id = item.Id })">
+                                                            <span class="zoom-caption">
+                                                                <i class="icon-play fa fa-play"></i>
+                                                            </span>
+                                                            <img src=@item.ThumbPath />
+                                                        </a>
+                                                    </div>
+                                                    <h3 class="vid-name"><a href="#">@item.VideoName</a></h3>
+                                                    <div class="info">
+                                                        <h5>By <a href="#">@item.UpId</a></h5>
+                                                        <span><i class="fa fa-calendar"></i>@ResultHelper.ChangeDateFormat((DateTime)item.AddedDate)</span>
+                                                        <span><i class="fa fa-heart"></i>1,200</span>
+                                                    </div>
+                                                </div>
+                                            }
+
+                                        }
+
+                                    </div>
+                                </div>
+                            </section>
+                            <section class="vid-tv">
+                                <div class="header">
+                                    <h2>C#</h2>
+                                </div>
+                                <div class="row">
+                                    <div id="owl-demo-2" class="owl-carousel">
+                                        @foreach (var item in Model)
+                                        {
+                                            if (item.Category == "CSharp")
+                                            {
+                                                <div class="item wrap-vid">
+                                                    <div class="zoom-container">
+                                                        <a href="@Url.Action("Single","Video", new { id = item.Id })">
+                                                            <span class="zoom-caption">
+                                                                <i class="icon-play fa fa-play"></i>
+                                                            </span>
+                                                            <img src=@item.ThumbPath />
+                                                        </a>
+                                                    </div>
+                                                    <h3 class="vid-name"><a href="#">@item.VideoName</a></h3>
+                                                    <div class="info">
+                                                        <h5>By <a href="#">@item.UpId</a></h5>
+                                                        <span><i class="fa fa-calendar"></i>@ResultHelper.ChangeDateFormat((DateTime)item.AddedDate)</span>
+                                                        <span><i class="fa fa-heart"></i>1,200</span>
+                                                    </div>
+                                                </div>
+                                            }
+
+                                        }
+
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                    @Html.Partial("_VideorighterPage")
+                </div>
+            </div>
+        </section>
+
+        <!--////////////////////////////////////Footer-->
+        <footer>
+        
+        </footer>
+
+        <!-- Slider -->
+        <script src="~/Content/VideoWebSite/~/Content/VideoWebSite/js/classie.js"></script>
+        <script src="~/Content/VideoWebSite/js/jquery-2.1.1.js"></script>
+        <script src="~/Content/VideoWebSite/js/demo.js"></script>
+        <script src="~/Content/VideoWebSite/js/classie.js"></script>
+        <!-- Carousel -->
+        <script src="~/Content/VideoWebSite/js/owl.carousel.js"></script>
+        <script>
+    $(document).ready(function() {
+
+      $("#owl-demo-1").owlCarousel({
+        items : 4,
+        lazyLoad : true,
+        navigation : true
+      });
+	  $("#owl-demo-2").owlCarousel({
+        items : 4,
+        lazyLoad : true,
+        navigation : true
+      });
+	  $("#owl-demo-3").owlCarousel({
+        items : 4,
+        lazyLoad : true,
+        navigation : true
+      });
+    });
+        </script>
+    </div>
+</body>
+</html>

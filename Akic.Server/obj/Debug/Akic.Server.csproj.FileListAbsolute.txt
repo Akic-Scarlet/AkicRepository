@@ -1,0 +1,5 @@
+D:\我的文档\Visual Studio 2013\Projects\Akic.FrameWorkEx\Akic.Server\bin\Debug\Akic.Server.dll
+D:\我的文档\Visual Studio 2013\Projects\Akic.FrameWorkEx\Akic.Server\bin\Debug\Akic.Server.pdb
+D:\我的文档\Visual Studio 2013\Projects\Akic.FrameWorkEx\Akic.Server\obj\Debug\Akic.Server.csprojResolveAssemblyReference.cache
+D:\我的文档\Visual Studio 2013\Projects\Akic.FrameWorkEx\Akic.Server\obj\Debug\Akic.Server.dll
+D:\我的文档\Visual Studio 2013\Projects\Akic.FrameWorkEx\Akic.Server\obj\Debug\Akic.Server.pdb

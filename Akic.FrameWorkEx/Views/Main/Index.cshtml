@@ -1,0 +1,204 @@
+﻿@model IEnumerable<Akic.Core.Domain.Commom.News>
+@using Akic.Core.ResultHelper
+@using Akic.Core.Domain.Commom
+@using Akic.Core
+<html>
+<head>
+    <title>Home</title>
+    <link href="~/Content/NewsWebSite/css/bootstrap.css" rel='stylesheet' type='text/css' />
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="~/Content/NewsWebSite/js/jquery.min.js"></script>
+    <!-- Custom Theme files -->
+    <link href="~/Content/NewsWebSite/css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <!-- Custom Theme files -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Express News Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- for bootstrap working -->
+    <script type="text/javascript" src="~/Content/NewsWebSite/js/bootstrap.js"></script>
+    <!-- //for bootstrap working -->
+    <!-- web-fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
+    <script src="~/Content/NewsWebSite/js/responsiveslides.min.js"></script>
+    <script>
+		$(function () {
+		  $("#slider").responsiveSlides({
+			auto: true,
+			nav: true,
+			speed: 500,
+			namespace: "callbacks",
+			pager: true,
+		  });
+		});
+    </script>
+    <script type="text/javascript" src="~/Content/NewsWebSite/js/move-top.js"></script>
+    <script type="text/javascript" src="~/Content/NewsWebSite/js/easing.js"></script>
+    <!--/script-->
+    <script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$(".scroll").click(function(event){
+					event.preventDefault();
+					$('html,body').animate({scrollTop:$(this.hash).offset().top},900);
+				});
+			});
+    </script>
+</head>
+<body>
+    <!-- header-section-starts-here -->
+    @Html.Partial("_headerPage")
+    <!-- header-section-ends-here -->
+    <div class="wrap">
+        <div class="move-text">
+            <div class="breaking_news">
+                <h2>置顶新闻</h2>
+            </div>
+            <div class="marquee">
+              @foreach (var item in (List<News>)ViewBag.getSomeTopFloat)
+              {
+                  var i = (int)ViewBag.index++;
+                  string mar = "marquee" + i.ToString();
+                <div class=@mar><a class="breaking" href=/Main/Single/@item.Id>>>@(new HtmlString(ResultHelper.SubValue(ResultHelper.NoHtml(item.NewsContent), 20)))</a></div>
+
+              }
+                
+                <div class="clearfix"></div>
+            </div>
+            <div class="clearfix"></div>
+            <script type="text/javascript" src="~/Content/NewsWebSite/js/jquery.marquee.min.js"></script>
+            <script>
+			  $('.marquee').marquee({ pauseOnHover: true });
+			  // sourceURL=pen.js
+            </script>
+        </div>
+    </div>
+    <div class="copyrights">Collect from </a></div>
+    <!-- content-section-starts-here -->
+    <div class="main-body">
+        <div class="wrap">
+            <div class="col-md-8 content-left">
+                <div class="slider">
+                    <div class="callbacks_wrap">
+                        <ul class="rslides" id="slider">
+                            @foreach (var item in (List<News>)ViewBag.getSomeTopNews)
+                            {
+                                <li>
+                                    <img src="@item.ThumbPath"  alt="">
+                                    <div class="caption">
+                                        <a href=@Url.Action("Single","Main", new { id = item.Id })>@item.NewsTitle</a>
+                                    </div>
+                                </li>
+                            }
+                            
+                       
+                        </ul>
+                    </div>
+                </div>
+                <div class="articles">
+                    <header>
+                        <h3 class="title-head">新闻汇总</h3>
+                    </header>
+                     @foreach (var item in Model)
+                    {
+                        <div class="article">
+                            <div class="article-left">
+                                <a href="/Main/Single/@item.Id"><img src=@item.ThumbPath height="300"></a>
+                            </div>
+                            <div class="article-right">
+                                <div class="article-title">
+                                    <p>On Feb 25, 2015 <a class="span_link" href="#"><span class="glyphicon glyphicon-comment"></span>@item.CommentNum </a><a class="span_link" href="#"><span class="glyphicon glyphicon-eye-open"></span>@item.ViewTimes </a><a class="span_link" href="#"><span class="glyphicon glyphicon-thumbs-up"></span>52</a></p>
+                                    <a class="title" href=@Url.Action("Single","Main", new { id = item.Id })> @item.NewsTitle</a>
+                                </div>
+                                <div class="article-text">
+                                 
+                                    <p>@(new HtmlString(ResultHelper.SubValue(ResultHelper.NoHtml(item.NewsContent),100)))</p>
+                                    <a href=@Url.Action("Single","Main", new { id = item.Id })><img src="~/Content/NewsWebSite/images/more.png" alt="" /></a>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                     }
+                    
+                </div>
+             
+                <div class="pagination" style="margin-left:20%">
+                    @(new HtmlString((PagerHelper.GeneratePagerString((int)ViewBag.pageindex, 5, (int)ViewBag.countTotal))))
+                </div>
+            </div>
+               
+            </div>
+               
+            @Html.Partial("_righterPage")
+            <div class="clearfix"></div>
+       
+    </div>
+    <!-- content-section-ends-here -->
+    <!-- footer-section-starts-here -->
+    @Html.Partial("_footerPage")
+    <!-- footer-section-ends-here -->
+    <script type="text/javascript">
+    $(document).ready(function() {
+
+        $().UItoTop({ easingType: 'easeOutQuart' });
+    });
+
+    $(function () {
+        //页面加载完成后从后如加载当前页数据
+        initData();
+    });
+    //初始化表格数据
+    function initData(queryData) {
+
+        $.get("/Main/getPageData", queryData, function (data) {
+            var tb = $("#QQQ");
+            //先移除旧的，添加新的
+            $("#QQQ div[type=data]").remove();
+            for (var i = 0; i < data.Data.length; i++) {
+
+               
+               var tmpStr = "<div class='article' type='data'>"
+                tmpStr+="<div class='article-left'>"
+                tmpStr += "    <a href= /Main/Single/" + data.Data[i].Id + "><img src='" + data.Data[i].ThumbPath + "'></a>"
+                tmpStr+=      "  </div>"
+                tmpStr+=     "  <div class='article-right'>"
+                tmpStr+=          " <div class='article-title'>"
+                tmpStr+=             "  <p>On Feb 25, 2015 <a class='span_link' href='#'><span class='glyphicon glyphicon-comment'></span>"+data.Data[i].CommentNum+"</a><a class='span_link' href='#'><span class='glyphicon glyphicon-eye-open'></span>"+data.Data[i].ViewTimes+" </a><a class='span_link' href='#'><span class='glyphicon glyphicon-thumbs-up'></span>52</a></p>"
+                tmpStr += "   <a class='title' href= /Main/Single/" + data.Data[i].Id + ">" + data.Data[i].NewsTitle + " </a>"
+                tmpStr+=         "  </div>"
+                tmpStr+=         "  <div class='article-text'>"
+                tmpStr+=
+                tmpStr+=             "   <p>"+data.Data[i].NewsContent.substr(0,100)+"</p>"
+                tmpStr+=             "  <a href=/Main/Single/"+data.Data[i].Id+")><img src='~/Content/NewsWebSite/images/more.png' alt='' /></a>"
+		            tmpStr+=            "   <div class='clearfix'></div>"
+		            tmpStr+=          " </div>"
+		            tmpStr+=     "  </div>"
+		            tmpStr+=     "  <div class='clearfix'></div>"
+		            tmpStr+=  "  </div>"
+		           
+		            tb.append(tmpStr);
+
+		        }
+
+		        $("#Nav").html(data.NavStr);
+
+		        //绑定分页标签的点击事件
+
+		        $(".pageLink").click(function () {
+		            //把页码弹出来
+		            var strHref = $(this).attr("href");
+		            var queryStr = strHref.substr(strHref.indexOf('?') + 1);
+		            //alert(queryStr);
+		            initTable(queryStr);
+		            return false;
+		        });
+		    });
+		}
+     
+    </script>
+    <a href="#to-top" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+    <!---->
+</body>
+</html>

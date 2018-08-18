@@ -1,0 +1,41 @@
+﻿@{
+
+    Layout = null;
+
+}
+
+ <script src="~/Content/VideoWebSite/js/jquery-2.1.1.js"></script>
+<script type="text/javascript">
+    function filterUnderline(str) {
+        var r = str.replace(/_+/, "");
+        return r;
+    }
+    var str = "";
+    function findChildren(data)
+    {
+        $(data).each(function (i, item) {
+            var html = "";
+            var count =Object.keys(item).length
+            if (count > 0) {
+                findChildren(item.children)
+                str += "<li>" + filterUnderline(item.elementLabel) + "</li>"
+            }                  
+        })
+    }
+    $(document).ready(function () {
+        $("#clickTest").click(function () {
+            $.getJSON("/DataTest/test.json", function (data) {
+                var html = "<ul>";
+                $(data).each(function (i, items) {
+                     findChildren(items.children)
+                });
+                html += str;
+                html+="</ul>"
+                $("#getJson").html(html);
+            });
+        });
+    });
+
+</script>
+<input type="button" id="clickTest" />
+<div id="getJson"></div>

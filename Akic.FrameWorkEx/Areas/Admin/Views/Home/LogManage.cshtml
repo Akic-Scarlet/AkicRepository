@@ -1,0 +1,168 @@
+﻿<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>网站后台管理系统HTML模板--模板之家 www.cssmoban.com</title>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <link href="~/Content/Admin_CSS_JS/css/style.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <style type="text/css">
+            .inputstyle{
+      width:245px; height:32px; margin:10px; line-height:10px; border-top:solid 1px #a7b5bc; border-left:solid 1px #a7b5bc; border-right:solid 1px #ced9df; border-bottom:solid 1px #ced9df; text-indent:10px; 
+    }
+                    .textareastyle{
+                        border-top:solid 1px #a7b5bc; border-left:solid 1px #a7b5bc; border-right:solid 1px #ced9df; border-bottom:solid 1px #ced9df;  repeat-x; text-indent:10px; 
+    }
+    </style>
+
+    <script type="text/javascript">
+
+        function DeletePop(id,logger,mes,date,level) {
+            var gettip = $(".DeletetipEX");
+            var str = "<div id='formInput' style='margin-left:20px;'>"
+            str += " <div><label>日志ID：</label><input class='inputstyle' type='text'value=" + id + " /></div>";
+            str += " <div><label>日志操作者：</label><input class='inputstyle' type='text' value="+logger+"/></div>";
+            str += " <div><label>日志日期：</label><input class='inputstyle'type='text' value=" + date + " /></div>";
+            str += " <div><label>日志等级：</label><input class='inputstyle' type='text' value=" + level + " /></div>";
+            str += " <div><label>日志内容：</label><textarea  class='textareastyle' rows='3' cols='50'>" + mes + "</textarea></div>";
+            str += " <div style='margin-left:140px;'><input class='Deletesure'  type='button' value='确认' onclick = 'DeleteBtnCancelClick()'/></div>";
+            str += "       </div>";
+         
+            gettip.append(str);
+            $(".DeletetipEX").fadeIn(200);
+        }
+
+        function DeleteBtnCancelClick() {
+            $(".DeletetipEX").fadeOut(100);
+            $("div#formInput").remove();
+        }
+        $(".Deletesure").click(function () {
+            $(".DeletetipEX").fadeOut(100);
+        });
+
+        $(".Deletecancel").click(function () {
+            $(".DeletetipEX").fadeOut(100);
+        });
+
+$(document).ready(function(){
+
+    $(".DeletetiptopEX a").click(function () {
+        $(".DeletetipEX").fadeOut(200);
+        $("div#formInput").remove();
+    });
+
+
+
+
+});
+    </script>
+
+
+</head>
+
+
+<body>
+
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul" >
+            <li><a href="#">首页</a></li>
+            <li><a href="#">数据表</a></li>
+            <li><a href="#">基本内容</a></li>
+        </ul>
+    </div>
+
+    <div class="rightinfo">
+
+        <div class="tools">
+
+            <ul class="toolbar">
+                <li class="AddClick"><span><img src="~/Content/Admin_CSS_JS/images/t01.png" /></span>添加</li>
+            </ul>
+
+
+            <ul class="toolbar1">
+                <li><span><img src="~/Content/Admin_CSS_JS/images/t05.png" /></span>设置</li>
+            </ul>
+
+        </div>
+
+
+        <table class="tablelist" id="tbList">
+            <tr>
+                <th>编号<i class="sort"><img src="~/Content/Admin_CSS_JS/images/px.gif" /></i></th>
+                <th>操作者</th>
+                <th>操作内容</th>
+                <th>操作时间</th>
+                <th>日志等级</th>
+                <th>操作</th>
+            </tr>
+
+        </table>
+
+
+        <div class="pagin">
+            <div class="message">共<i class="blue">@((int)ViewBag.Count)</i>条记录，当前显示第&nbsp;<i class="blue">@((int)ViewBag.Index);</i>页</div>
+            <div id="Nav" class="paginator"></div>
+        </div>
+
+
+        
+
+        <div class="DeletetipEX" style="width: 485px; height: 460px; position: absolute; top: 10%; left: 30%; background: #fcfdfd; box-shadow: 1px 8px 10px 1px #9b9b9b; border-radius: 1px; behavior: url(js/pie.htc); display: none; z-index: 111111;">
+            <div class="DeletetiptopEX"><span>详细信息</span><a></a></div>
+            <div class="DeletetipinfoEX" style="padding-top: 30px; margin-left: 65px;">
+                    
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <script type="text/javascript">
+        $('.tablelist tbody tr:odd').addClass('odd');
+        $(function () {
+            //页面加载完成后从后如加载当前页数据
+            initTable();
+        });
+        //初始化表格数据
+        function initTable(queryData) {
+
+            $.get("/Admin/Home/getLogPageData", queryData, function (data) {
+                var tb = $("#tbList");
+                //先移除旧的，添加新的
+                $("#tbList tr[type=data]").remove();
+                for (var i = 0; i < data.Data.length; i++) {
+                    var strEX = data.Data[i].Id
+                    var strTr = "<tr type='data'>";
+                    strTr += "<td>" + data.Data[i].Id + "</td>";
+                    strTr += "<td>" + data.Data[i].Logger + "</td>"; 
+                    strTr += "<td>" + data.Data[i].Message + "</td>";
+                    strTr += "<td>" + data.Data[i].AddedDate + "</td>";
+                    strTr += "<td>" + data.Data[i].Level + "</td>";   
+                    strTr += "<td><a UId='" + data.Data[i].Id + "' href='javascript:void(0)' onclick='DeletePop(&quot;" + data.Data[i].Id + "&quot;,&quot;" + data.Data[i].Logger + "&quot;,&quot;" + data.Data[i].Message + "&quot;,&quot;" + data.Data[i].AddedDate + "&quot;,&quot;" + data.Data[i].Level + "&quot;)'>查看&nbsp;&nbsp;</a>";
+                    strTr += "</tr>";
+                    tb.append(strTr);
+                }
+
+                $("#Nav").html(data.NavStr);
+
+                //绑定分页标签的点击事件
+
+                $(".pageLink").click(function () {
+                    //把页码弹出来
+                    var strHref = $(this).attr("href");
+                    var queryStr = strHref.substr(strHref.indexOf('?') + 1);
+                    //alert(queryStr);
+                    initTable(queryStr);
+                    return false;
+                });
+            });
+        }
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+﻿@using Akic.Core.Domain.Commom
+@using Akic.Core.ResultHelper
+<aside class="col-md-4 blog-aside">
+    <div class="aside-widget">
+        <header>
+            <h3>推荐文章</h3>
+        </header>
+        <div class="body">
+            <ul class="clean-list">
+                @foreach (var item in (List<Article>)ViewBag.getSomeTopArticle)
+                {
+                    <li><a href=@Url.Action("detail", "Blog", new { id = item.Id })>@ResultHelper.SubValue(item.ArticleTitle, 30)</a></li>
+                }
+                               
+            </ul>
+        </div>
+    </div>
+
+    <div class="aside-widget">
+        <header>
+            <h3>近期推送</h3>
+        </header>
+        <div class="body">
+            <ul class="clean-list">
+                @foreach (var item in (List<Article>)ViewBag.getSomeRecentArticle)
+                {
+                   
+                    <li><a href=@Url.Action("detail", "Blog", new { id = item.Id })> @ResultHelper.SubValue(item.ArticleTitle,30)</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="aside-widget">
+        <header>
+            <h3>Tags</h3>
+        </header>
+        <div class="body clearfix">
+            <ul class="tags">
+                <li><a href="#">HTML5</a></li>
+                <li><a href="#">CSS3</a></li>
+                <li><a href="#">COMPONENTS</a></li>
+                <li><a href="#">TEMPLATE</a></li>
+                <li><a href="#">PLUGIN</a></li>
+                <li><a href="#">BOOTSTRAP</a></li>
+                <li><a href="#">TUTORIAL</a></li>
+                <li><a href="#">UI/UX</a></li>
+            </ul>
+        </div>
+    </div>
+</aside>

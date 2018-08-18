@@ -1,0 +1,160 @@
+﻿
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <script src="~/Content/Admin_CSS_JS/js/jquery.js"></script>
+    <link href="~/Content/Admin_CSS_JS/css/style.css" rel="stylesheet" />
+    <link href="~/Content/UEditor/themes/iframe.css" rel="stylesheet" />
+    <link href="~/Content/uploadify/uploadify.css" rel="stylesheet" />
+    <script src="~/Content/uploadify/jquery.uploadify.min.js"></script>
+    <style>
+        
+    </style>
+</head>
+
+<body>
+
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">视频发布</a></li>
+        </ul>
+    </div>
+
+    <div class="formbody">
+      
+        <div class="formtitle"><span>基本信息</span></div>
+
+        <ul class="forminfo">
+            <li><label>视频标题</label><input name="" type="text" class="dfinput" id="getTitle" /><i>标题不能超过30个字符</i></li>
+            <li><label>是否置顶</label><cite><input name="radioName" type="radio" value="1" />是&nbsp;&nbsp;&nbsp;&nbsp;<input name="radioName" type="radio" value="2" checked="checked" />否</cite></li>
+            <li><label>是否设为推荐</label><cite><input name="radioRecomName" type="radio" value="1" />是&nbsp;&nbsp;&nbsp;&nbsp;<input name="radioRecomName" type="radio" value="2" checked="checked" />否</cite></li>
+            <li><label>是否源于本地</label><cite><input name="radioLocalName" type="radio" value="1" />是&nbsp;&nbsp;&nbsp;&nbsp;<input name="radioLocalName" type="radio" value="2" checked="checked" />否</cite></li>
+             <li>
+                <label>发布类型</label>
+                <select class="dfinput" id="getSelectValue">
+                    <option>U3D</option>
+                    <option>CSharp</option>
+                </select>
+            </li>
+            <li><label>视频封面</label><input name="" type="text" class="dfinput" id="getPicPath" /><i>点击上传</i></li>
+            <li><span id="btn_Picupload"></span></li>
+            <li><label>视频路径</label><input name="" type="text" class="dfinput" id="getVideoPath" /><i>点击上传</i></li>
+            <li><span id="btn_Videoupload"></span></li>
+            <li><label>&nbsp;</label><input id="btnSummit" type="button" class="btn" value="确认提交" /></li>
+            <li><label>&nbsp;</label><input id="btnSummitQ" type="button" class="btn" value="QWE" /></li>
+        </ul>
+
+
+    </div>
+
+    <script type="text/javascript">
+        $("select#getSelectValue").change(function () {
+            var value = $(this).val()
+            RefreshPicUpload(value)
+            RefreshVideoUpload(value)
+            alert($(this).val())
+             });
+  
+            $(function () {
+
+                $("#btnSummit").click(function () {
+                    var getTitle = $("#getTitle").val();
+                    var getCategory = $("#getSelectValue").val();
+                    var getTop = false;
+                    var getLocal = false;
+                    var getRecom = false;
+                    var getPicPath = $("#getPicPath").val();
+                    var getVideoPath = $("#getVideoPath").val();
+                    var judgeValue = $("input[name='radioName']:checked").val();
+                    var judgeNextValue = $("input[name='radioLocalName']:checked").val();
+                    var judgeNextNextValue = $("input[name='radioRecomName']:checked").val();
+                    if (judgeValue == "1")
+                        getTop = true;
+                    else if (judgeValue == "2")
+                        getTop = false;
+                    if (judgeNextValue == "1")
+                        getLocal = true;
+                    else if (judgeNextValue == "2")
+                        getLocal = false;
+                    if (judgeNextNextValue == "1")
+                        getRecom = true;
+                    else if (judgeNextNextValue == "2")
+                        getRecom = false;
+
+                    $.ajax({
+                        url: "@Url.Action("Create", "VideoPost")",
+                        type: "Post",
+                        data: {
+                            "VideoName": getTitle,
+                            "Category":getCategory,
+                            "IsTop": getTop,
+                            "IsLocal": getLocal,
+                            "Recommend": getRecom,
+                            "ThumbPath": getPicPath,
+                            "VideoPath": getVideoPath,
+                        } ,
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.type == 1) {
+                                alert("发布成功")
+                                window.location.reload();
+                            }
+                        },
+                    });
+
+                })
+            })
+        function RefreshPicUpload(selectValue){
+            $('#btn_Picupload').uploadify({
+                uploader: '/Admin/VideoPost/upload',            // 服务器处理地址
+                swf: '/Content/uploadify/uploadify.swf',
+                buttonText: "选择文件",                  //按钮文字
+                height: 34,                             //按钮高度
+                width: 82,                              //按钮宽度
+                fileTypeExts: '*.gif; *.jpg; *.png;',           //允许的文件类型
+                fileTypeDesc: "请选择图片文件",           //文件说明
+                formData: { "imgType": "normal", "FileType": selectValue }, //提交给服务器端的参数
+                onUploadSuccess: function (file, data, response) {   //一个文件上传成功后的响应事件处理
+                    var data = $.parseJSON(data);
+                    $("#getPicPath").val(data.imgpath);
+
+                }
+            });
+        }
+ 
+            function RefreshVideoUpload(selectValue) {
+                $('#btn_Videoupload').uploadify(
+                    {
+                        uploader: '/Admin/VideoPost/Upload',            // 服务器处理地址
+                        swf: '/Content/uploadify/uploadify.swf',
+                        buttonText: "选择文件",                  //按钮文字
+                        height: 34,                             //按钮高度
+                        width: 82,
+                        fileSizeLimit: 99999999,
+                        fileTypeDesc: "请选择视频文件",           //文件说明
+                        onUploadError: function (file, errorCode, errorMsg, errorString) {
+                            alert('The file ' + file.name + ' could not be uploaded: ' + errorString+'ErrorMsgIs:'+errorMsg);   
+                        },
+                        formData: {
+                            "imgType": "normal",
+                            "FileType": selectValue
+                        },
+                        onUploadSuccess: function (file, data, response) {   //一个文件上传成功后的响应事件处理
+                            var data = $.parseJSON(data);
+                            $("#getVideoPath").val(data.imgpath);
+
+                        }
+                    });
+            };
+            $(function () {
+                var value = $("#getSelectValue").val()
+                RefreshPicUpload(value)
+                RefreshVideoUpload(value)
+            })
+    </script>
+
+</body>
+</html>

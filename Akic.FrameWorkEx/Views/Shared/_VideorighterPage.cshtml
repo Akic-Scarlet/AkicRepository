@@ -1,0 +1,75 @@
+﻿@using Akic.Core.Domain.Commom
+@using Akic.Core.ResultHelper
+<div id="sidebar" class="col-1-3" >
+    <form id="form-container" action="">
+        <!--<input type="submit" id="searchsubmit" value="" />-->
+        <a class="search-submit-button" href="javascript:void(0)">
+            <i class="fa fa-search"></i>
+        </a>
+        <div id="searchtext">
+            <input type="text" id="s" name="s" placeholder="Search Something...">
+        </div>
+    </form>
+
+    <!---- Start Widget ---->
+    <div class="widget wid-post">
+        <div class="wid-header">
+            <h5>Latest Posts</h5>
+        </div>
+        <div class="wid-content">
+            @foreach (var item in (List<Video>)ViewBag.getRightRecomVideo)
+            {
+                <div class="post wrap-vid">
+                    <div class="zoom-container">
+                        <a href="@Url.Action("Single","Video", new { id = item.Id })">
+                            <span class="zoom-caption">
+                                <i class="icon-play fa fa-play"></i>
+                            </span>
+                            <img src="@item.ThumbPath" />
+                        </a>
+                    </div>
+                    <div class="wrapper">
+                        <h5 class="vid-name"><a href="#">@item.VideoName</a></h5>
+                        <div class="info">
+                            <h6>By <a href="#">@item.UpId</a></h6>
+                            <span><i class="fa fa-calendar"></i>@ResultHelper.ChangeDateFormat((DateTime)item.AddedDate)</span>
+                            <span><i class="fa fa-heart"></i>1,200</span>
+                        </div>
+                    </div>
+                </div>
+                
+            }
+   
+        </div>
+    </div>
+    <!---- Start Widget ---->
+    <div class="widget wid-news">
+        <div class="wid-header">
+            <h5>Top News</h5>
+        </div>
+        <div class="wid-content">
+            @foreach (var item in (List<Video>)ViewBag.getRightTopVideo)
+            {
+                <div class="post wrap-vid">
+                    <div class="zoom-container">
+                        <a href="@Url.Action("Single","Video", new { id = item.Id })">
+                            <span class="zoom-caption">
+                                <i class="icon-play fa fa-play"></i>
+                            </span>
+                            <img src="@item.ThumbPath" />
+                        </a>
+                    </div>
+                    <div class="wrapper">
+                        <h5 class="vid-name"><a href="#">@item.VideoName</a></h5>
+                        <div class="info">
+                            <h6>By <a href="#">@item.UpId</a></h6>
+                            <span><i class="fa fa-calendar"></i>@ResultHelper.ChangeDateFormat((DateTime)item.AddedDate)</span>
+                            <span><i class="fa fa-heart"></i>1,200</span>
+                        </div>
+                    </div>
+                </div>
+            }
+            
+        </div>
+    </div>
+</div>

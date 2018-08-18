@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushBash.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushCpp.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushCSharp.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushCss.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushDelphi.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushDiff.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushGroovy.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushJava.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushJScript.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushPhp.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushPlain.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushPython.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushRuby.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushScala.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushSql.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushVb.js"></script>
+<script type="text/javascript" src="~/Content/syntaxhighlighter/scripts/shBrushXml.js"></script>
+<link type="text/css" rel="stylesheet" href="~/Content/syntaxhighlighter/styles/shCore.css" />
+<link type="text/css" rel="stylesheet" href="~/Content/syntaxhighlighter/styles/shThemeDefault.css" />
+
+<script type="text/javascript">
+    SyntaxHighlighter.config.clipboardSwf = '/Content/syntaxhighlighter/scripts/clipboard.swf';
+    SyntaxHighlighter.config.tagName = 'pre';       //可以更改解析的默认Tag。
+    SyntaxHighlighter.config.bloggerMode = true;
+    SyntaxHighlighter.config.stripBrs = true;
+    SyntaxHighlighter.config.strings = {
+        expandSource: '展开代码',
+        viewSource: '查看代码',
+        copyToClipboard: '复制代码',
+        copyToClipboardConfirmation: '代码复制成功',
+        print: '打印',
+        help: '?',
+        alert: '语法高亮\n\n',
+        noBrush: '不能找到刷子: ',
+        brushNotHtmlScript: '刷子没有配置html-script选项',
+        aboutDialog: '<div></div>'
+    };
+    SyntaxHighlighter.all();
+
+</script>
+<html>
+ 
+<body>
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>

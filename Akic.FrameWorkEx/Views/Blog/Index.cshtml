@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Akic.Core.Domain.Commom.Article>
+@using Akic.Core.ResultHelper
+@using Akic.Core.Domain.Commom
+@using Akic.Core
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Home</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Bootstrap styles -->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="~/Content/NewsWebSite/js/jquery.min.js"></script>
+    <link href="~/Content/NewsWebSite/css/bootstrap.css" rel='stylesheet' type='text/css' />
+    <link href="~/Content/BlogContent/css/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="~/Content/NewsWebSite/js/bootstrap.js"></script>
+    <script src="~/Content/BlogContent/js/modernizr.js"></script>
+
+    <!-- Font-Awesome -->
+   <!-- Google Webfonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600|PT+Serif:400,400italic' rel='stylesheet' type='text/css'>
+    <!-- Styles -->
+    <link href="~/Content/NewsWebSite/css/style.css" rel="stylesheet" type="text/css" media="all" />
+ 
+    <link rel="stylesheet" href="~/Content/BlogContent/css/style.css" id="theme-styles">
+</head>
+<body>
+    <header>
+        @Html.Partial("_headerPage")
+    </header>
+
+    <div class="widewrapper main">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 blog-main">
+                    <div class="row">
+                        @foreach (var item in Model)
+                        {
+                            <div class="col-md-11 col-sm-6">
+                                <article class=" blog-teaser">
+                                    <header>
+                                        <h3><a href=@Url.Action("detail","Blog", new { id = item.Id })>@item.ArticleTitle</a></h3>
+                                        <span class="meta">@item.AddedDate</span>
+                                        <hr>
+                                    </header>
+                                    <div class="body">
+                                      @(new HtmlString(ResultHelper.SubValue(ResultHelper.NoHtml(item.ArticleContent), 100)))
+                                    </div>
+                                    <div class="clearfix">
+                                        <a href=@Url.Action("detail","Blog", new { id = item.Id }) class="btn btn-clean-one">Read more</a>
+
+                                    </div>
+                                </article>
+                            </div>
+                        }
+                        
+                         
+                    </div>
+                   
+                    <div class="pagination" style="margin-left:20%">
+                        @(new HtmlString((PagerHelper.GeneratePagerString((int)ViewBag.pageindex, 5, (int)ViewBag.countTotal))))
+                    </div>
+                </div>
+                @Html.Partial("_BlogrighterPage")
+            </div>
+            
+        </div>
+    </div>
+
+    <footer>
+        @Html.Partial("_footerPage")
+    </footer>
+
+ 
+</body>
+</html>

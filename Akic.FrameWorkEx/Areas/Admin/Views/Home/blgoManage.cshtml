@@ -1,0 +1,191 @@
+﻿<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>网站后台管理系统HTML模板--模板之家 www.cssmoban.com</title>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <link href="~/Content/Admin_CSS_JS/css/style.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <script type="text/javascript">
+        function detail(id) {
+            window.location.href = "/Blog/detail/" + id + "";
+
+        }
+        function DeletePop(id) {
+            var gettip = $(".Deletetip");
+            var str=" <div class='Deletetipbtn' id='DeleteBtn'>";
+            str += "   <input name='' type='button' class='Deletesure' onclick = 'DeleteBtnsureClick(&quot;" + id + "&quot;)' value='确定' />";
+            str += "<input name='' type='button' class='Deletecancel'  onclick = 'DeleteBtnCancelClick()' value='取消' />";
+            str+=" </div>";
+            gettip.append(str);
+            $(".Deletetip").fadeIn(200);
+        }
+
+        function DeleteBtnsureClick(QQQ) {
+            $.post("/Admin/Home/BlogDelete", { id: QQQ },
+                function (data) {
+                    if (data.type == 1) {
+                        $(".Deletetip").fadeOut(100);
+                        alert('删除成功')
+                        initTable();
+                    } else {
+                        $(".Deletetip").fadeOut(100);
+                        alert('删除失败')
+                    }
+                    $("div#DeleteBtn").remove();
+
+                })
+        }
+        function DeleteBtnCancelClick() {
+            $(".Deletetip").fadeOut(100);
+            $("div#DeleteBtn").remove();
+        }
+        $(".Deletesure").click(function () {
+            $(".Deletetip").fadeOut(100);
+        });
+
+        $(".Deletecancel").click(function () {
+            $(".Deletetip").fadeOut(100);
+        });
+
+$(document).ready(function(){
+
+    $(".Deletetiptop a").click(function () {
+        $(".Deletetip").fadeOut(200);
+        $("div#DeleteBtn").remove();
+    });
+
+
+
+
+});
+    </script>
+
+
+</head>
+
+
+<body>
+
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">数据表</a></li>
+            <li><a href="#">基本内容</a></li>
+        </ul>
+    </div>
+
+    <div class="rightinfo">
+
+        <div class="tools">
+
+            <ul class="toolbar">
+                <li class="AddClick"><span><img src="~/Content/Admin_CSS_JS/images/t01.png" /></span>添加</li>
+            </ul>
+
+
+            <ul class="toolbar1">
+                <li><span><img src="~/Content/Admin_CSS_JS/images/t05.png" /></span>设置</li>
+            </ul>
+
+        </div>
+
+
+        <table class="tablelist" id="tbList">
+            <tr>
+                <th>编号<i class="sort"><img src="~/Content/Admin_CSS_JS/images/px.gif" /></i></th>
+                <th>标题</th>
+                <th>发布时间</th>
+                <th>是否置顶</th>
+                <th>文章类型</th>
+                <th>操作</th>
+            </tr>
+
+        </table>
+
+
+        <div class="pagin">
+            <div class="message">共<i class="blue">@((int)ViewBag.Count)</i>条记录，当前显示第&nbsp;<i class="blue">@((int)ViewBag.Index);</i>页</div>
+            <div id="Nav" class="paginator"></div>
+        </div>
+
+
+        <div class="Addtip">
+            <div class="Addtiptop"><span>提示信息</span><a></a></div>
+            <div class="Addtipinfo">
+                <span><img src="~/Content/Admin_CSS_JS/images/ticon.png" /></span>
+                <div class="Addtipright">
+                    <p>是否确认对信息的修改 ？</p>
+                    <cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+                </div>
+            </div>
+            <div class="Addtipbtn">
+                <input name="" type="button" class="Addsure" value="确定" />&nbsp;
+                <input name="" type="button" class="Addcancel" value="取消" />
+            </div>
+        </div>
+
+        <div class="Deletetip">
+            <div class="Deletetiptop"><span>提示信息</span><a></a></div>
+            <div class="Deletetipinfo">
+                <span><img src="~/Content/Admin_CSS_JS/images/ticon.png" /></span>
+                <div class="Deletetipright">
+                    <p>是否删除此信息 ？</p>
+                    <cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <script type="text/javascript">
+        $('.tablelist tbody tr:odd').addClass('odd');
+        $(function () {
+            //页面加载完成后从后如加载当前页数据
+            initTable();
+        });
+        //初始化表格数据
+        function initTable(queryData) {
+
+            $.get("/Admin/Home/getBlogPageData", queryData, function (data) {
+                var tb = $("#tbList");
+                //先移除旧的，添加新的
+                $("#tbList tr[type=data]").remove();
+                for (var i = 0; i < data.Data.length; i++) {
+                    var strEX = data.Data[i].Id
+                    var strTr = "<tr type='data'>";
+                    strTr += "<td>" + data.Data[i].Id + "</td>";
+                    strTr += "<td>" + data.Data[i].ArticleTitle + "</td>";
+                    strTr += "<td>" + data.Data[i].AddedDate + "</td>";
+                    strTr += "<td>" + data.Data[i].IsTop + "</td>";
+                    strTr += "<td>" + data.Data[i].Category + "</td>";
+                    strTr += "<td><a UId='" + data.Data[i].Id + "' href='javascript:void(0)' onclick='detail(&quot;" + data.Data[i].Id + "&quot;)'>查看&nbsp;&nbsp;</a>" +
+                       " <a UId='" + data.Data[i].Id + "' href='javascript:void(0)'>修改&nbsp;&nbsp;</a>"+
+                      "<a UId='" + data.Data[i].Id + "' href='javascript:void(0)' onclick='DeletePop(&quot;" + data.Data[i].Id + "&quot;)' '>删除</a></td>";
+                    strTr += "</tr>";
+                    tb.append(strTr);
+
+                }
+
+                $("#Nav").html(data.NavStr);
+
+                //绑定分页标签的点击事件
+
+                $(".pageLink").click(function () {
+                    //把页码弹出来
+                    var strHref = $(this).attr("href");
+                    var queryStr = strHref.substr(strHref.indexOf('?') + 1);
+                    //alert(queryStr);
+                    initTable(queryStr);
+                    return false;
+                });
+            });
+        }
+
+
+    </script>
+</body>
+</html>
